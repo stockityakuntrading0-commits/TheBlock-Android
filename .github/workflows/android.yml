@@ -19,7 +19,6 @@ jobs:
         run: |
           mkdir -p source
           unzip -q TheBlox_Android_Phone_Builder.zip -d source
-          find source -name settings.gradle -o -name settings.gradle.kts
 
       - name: Setup Java
         uses: actions/setup-java@v4
@@ -27,10 +26,14 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: '8.7'
+      - name: Install Gradle 8.9
+        run: |
+          wget https://services.gradle.org/distributions/gradle-8.9-bin.zip
+          unzip -q gradle-8.9-bin.zip
+          echo "$GITHUB_WORKSPACE/gradle-8.9/bin" >> $GITHUB_PATH
+
+      - name: Check Gradle Version
+        run: gradle --version
 
       - name: Build APK
         run: |
